@@ -242,3 +242,174 @@ SELECT
 FROM reviews
 GROUP BY DATE_PART('month', submit_date), product_id
 ORDER BY DATE_PART('month', submit_date), product_id
+
+
+-- ======================================================================
+--    App Click-through Rate (CTR) [Facebook SQL Interview Question]
+-- ======================================================================
+
+-- ** Link: https://datalemur.com/questions/click-through-rate
+
+-- Assume you have an events table on Facebook app analytics. Write a query to calculate the click-through rate
+-- (CTR) for the app in 2022 and round the results to 2 decimal places.
+
+-- Definition and note:
+
+-- Percentage of click-through rate (CTR) = 100.0 * Number of clicks / Number of impressions
+-- To avoid integer division, multiply the CTR by 100.0, not 100.
+
+SELECT 
+  t1.app_id,
+  ROUND( t1.number_of_clicks / t1.number_of_impressions * 100.0, 2 ) as teste
+FROM (
+  SELECT
+    app_id,
+    CAST( COUNT(*)  FILTER (WHERE event_type = 'click') AS NUMERIC ) AS number_of_clicks,
+    CAST( COUNT(*) FILTER (WHERE event_type = 'impression') AS NUMERIC ) AS number_of_impressions
+  FROM events
+  WHERE DATE_PART('year', timestamp) = 2022
+  GROUP BY app_id
+) as t1
+
+
+-- ======================================================================
+--        Second Day Confirmation [TikTok SQL Interview Question]
+-- ======================================================================
+
+-- ** Link: https://datalemur.com/questions/second-day-confirmation
+
+-- Assume you're given tables with information about TikTok user sign-ups and confirmations through email and text.
+-- New users on TikTok sign up using their email addresses, and upon sign-up, each user receives a text message
+-- confirmation to activate their account.
+
+-- Write a query to display the user IDs of those who did not confirm their sign-up on the first day, but confirmed 
+-- on the second day.
+
+-- Definition:
+
+-- action_date refers to the date when users activated their accounts and confirmed their sign-up through text
+-- messages.
+
+SELECT 
+  user_id
+FROM emails e
+  LEFT JOIN texts t ON e.email_id = t.email_id
+WHERE
+  EXTRACT(DAY FROM (action_date - signup_date)) = 1 AND
+  signup_action = 'Confirmed'
+
+
+-- ======================================================================
+--    Cards Issued Difference [JPMorgan Chase SQL Interview Question]
+-- ======================================================================
+
+-- ** Link: https://datalemur.com/questions/cards-issued-difference
+
+-- Your team at JPMorgan Chase is preparing to launch a new credit card, and to gain some insights, you're
+-- analyzing how many credit cards were issued each month.
+
+-- Write a query that outputs the name of each credit card and the difference in the number of issued cards between
+-- the month with the highest issuance cards and the lowest issuance. Arrange the results based on the largest
+-- disparity.
+
+SELECT
+  card_name,
+  MAX(issued_amount) - MIN(issued_amount) AS difference
+FROM monthly_cards_issued
+GROUP BY card_name
+ORDER BY MAX(issued_amount) - MIN(issued_amount) DESC
+
+
+-- ======================================================================
+--           Compressed Mean [Alibaba SQL Interview Question]
+-- ======================================================================
+
+-- ** Link: https://datalemur.com/questions/alibaba-compressed-mean
+
+-- You're trying to find the mean number of items per order on Alibaba, rounded to 1 decimal place using
+-- tables which includes information on the count of items in each order (item_count table) and the corresponding
+-- number of orders for each item count (order_occurrences table).
+
+SELECT
+  ROUND(
+    CAST(
+      SUM(item_count * order_occurrences) / SUM(order_occurrences) AS NUMERIC
+    ), 1)
+FROM items_per_order;
+
+
+-- ======================================================================
+--    Pharmacy Analytics (Part 1) [CVS Health SQL Interview Question]
+-- ======================================================================
+
+-- ** Link: https://datalemur.com/questions/top-profitable-drugs
+
+-- CVS Health is trying to better understand its pharmacy sales, and how well different products are selling.
+-- Each drug can only be produced by one manufacturer.
+
+-- Write a query to find the top 3 most profitable drugs sold, and how much profit they made. Assume that there
+-- are no ties in the profits. Display the result from the highest to the lowest total profit.
+
+-- Definition:
+
+-- - cogs stands for Cost of Goods Sold which is the direct cost associated with producing the drug.
+-- - Total Profit = Total Sales - Cost of Goods Sold
+
+SELECT
+  drug,
+  total_sales - cogs as total_profit
+FROM pharmacy_sales
+ORDER BY total_sales - cogs DESC
+LIMIT 3
+
+
+-- ======================================================================
+--    Pharmacy Analytics (Part 2) [CVS Health SQL Interview Question]
+-- ======================================================================
+
+-- ** Link: https://datalemur.com/questions/non-profitable-drugs
+
+-- CVS Health is analyzing its pharmacy sales data, and how well different products are selling in the market.
+-- Each drug is exclusively manufactured by a single manufacturer.
+
+-- Write a query to identify the manufacturers associated with the drugs that resulted in losses for CVS Health
+-- and calculate the total amount of losses incurred.
+
+-- Output the manufacturer's name, the number of drugs associated with losses, and the total losses in absolute
+-- value. Display the results sorted in descending order with the highest losses displayed at the top.
+
+SELECT
+  manufacturer,
+  COUNT(*) AS drug_count,
+  SUM(cogs - total_sales) AS total_loss
+FROM pharmacy_sales
+WHERE (cogs - total_sales) > 0
+GROUP BY manufacturer
+ORDER BY SUM(cogs - total_sales) DESC
+
+
+-- ======================================================================
+--    Pharmacy Analytics (Part 3) [CVS Health SQL Interview Question]
+-- ======================================================================
+
+-- ** Link: https://datalemur.com/questions/total-drugs-sales
+
+SELECT
+  manufacturer,
+  CONCAT( '$', ROUND( SUM(total_sales) / 1000000.0), ' million') AS sale
+FROM pharmacy_sales
+GROUP BY manufacturer
+ORDER BY 
+  ROUND( SUM(total_sales) / 1000000.0) DESC,
+  manufacturer DESC
+
+
+
+
+
+
+
+
+
+
+
