@@ -4,7 +4,7 @@
 
 -- ** PREMIUM **
 
--- * Link: https://datalemur.com/questions/ad-campaign-roas]
+-- * Link: https://datalemur.com/questions/ad-campaign-roas
 
 -- Google marketing managers are analyzing the performance of various advertising accounts over the last month. 
 -- They need your help to gather the relevant data.
