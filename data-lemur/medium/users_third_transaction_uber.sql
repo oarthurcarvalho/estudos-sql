@@ -2,8 +2,6 @@
 --       User's Third Transaction [Uber SQL Interview Question]
 -- ======================================================================
 
--- ** PREMIUM **
-
 -- * Link: https://datalemur.com/questions/sql-third-transaction
 
 -- Assume you are given the table below on Uber transactions made by users. Write a query to obtain the third
