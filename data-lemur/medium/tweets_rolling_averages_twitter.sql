@@ -2,8 +2,6 @@
 --       Tweets' Rolling Averages [Twitter SQL Interview Question]
 -- ======================================================================
 
--- ** PREMIUM **
-
 -- * Link: https://datalemur.com/questions/rolling-average-tweets
 
 -- Given a table of tweet data over a specified time period, calculate the 3-day rolling average of tweets for

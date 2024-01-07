@@ -2,8 +2,6 @@
 --      Sending vs. Opening Snaps [Snapchat SQL Interview Question]
 -- ======================================================================
 
--- ** PREMIUM **
-
 -- * Link: https://datalemur.com/questions/time-spent-snaps
 
 -- Assume you're given tables with information on Snapchat users, including their ages and time spent sending and
